@@ -2,7 +2,7 @@
     "name": "discord-slash-bot",
     "description": "About A fully customizable bot built with discord.js",
     "repository": "https://github.com/Harmonynos/discord-slash-bot",
-    "logo": "https://i.imgur.com/aJXyep3.png",
+    "logo": "https://avatars.githubusercontent.com/u/89950031?s=200&v=4",
     "keywords": "Discord slash bot",
     "image": "heroku/nodejs",
     "buildpacks": [
