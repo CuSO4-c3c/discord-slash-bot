@@ -18,6 +18,14 @@
         "botID": {
             "description": "Client_ID",
             "required": "true"
+        },
+        "oauthv2link": {
+            "description": "oauthv2link. (https://discord.com/oauth2/authorize/)",
+            "required": "false"
+        },
+        "Admin": {
+            "description": "Adminbot",
+            "required": "true"
         }
     }
 }
