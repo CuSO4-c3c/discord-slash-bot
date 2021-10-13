@@ -1,0 +1,23 @@
+{
+    "name": "discord-slash-bot",
+    "description": "About A fully customizable bot built with discord.js",
+    "repository": "https://github.com/Harmonynos/discord-slash-bot",
+    "logo": "https://i.imgur.com/aJXyep3.png",
+    "keywords": "Discord slash bot",
+    "image": "heroku/nodejs",
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ],
+    "env": {
+        "token": {
+            "description": "The Discord Bot Token (https://discord.com/developers/applications)",
+            "required": "true"
+        },
+        "botID": {
+            "description": "Client_ID",
+            "required": "true"
+        }
+    }
+}
