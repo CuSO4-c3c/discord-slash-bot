@@ -7,6 +7,7 @@ client.slash = new Discord.Collection();
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const path = require('path')
+const { keepalive } = require('./keepalive')
 const commands = []
 readdirSync("./commands/").map(async dir => {
     readdirSync(`./commands/${dir}/`).map(async (cmd) => {
@@ -52,4 +53,5 @@ client.on("interactionCreate", async (interaction) => {
         }
     }
 });
+keepalive();
 client.login(process.env.token);
