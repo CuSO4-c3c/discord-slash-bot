@@ -22,6 +22,7 @@ module.exports = {
         catch(e) {
             return interaction.reply({ content: 'An Error Occured, Try Again Later.', ephemeral: true })
         }
-        return interaction.reply(response.success)
+        await interaction.deferReply()
+        await interaction.editReply(response.success)
     }
 }
