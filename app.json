@@ -20,16 +20,14 @@
             "required": "true"
         },
         "oauthv2link": {
-            "description": "oauthv2link. (https://discord.com/oauth2/authorize/)",
-            "required": "false"
+            "description": "oauthv2link. (https://discord.com/oauth2/authorize/)"
         },
         "Admin": {
             "description": "Adminbot",
             "required": "true"
         },
         "ytcookie": {
-            "description": "youtube cookie",
-            "required": "false"
+            "description": "youtube cookie"
         }
     }
 }
