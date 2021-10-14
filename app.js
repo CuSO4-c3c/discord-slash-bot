@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 require("dotenv").config()
-const { Client, Intents } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const { Client, Intents, MessageEmbed } = require('discord.js');
+const client = new Client({ intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
 const { readdirSync } = require('fs')
 client.slash = new Discord.Collection();
 const { REST } = require('@discordjs/rest');
@@ -22,7 +22,7 @@ const rest = new REST({ version: "9" }).setToken(process.env.token);
             Routes.applicationCommands(process.env.botID),
             { body: commands },
         );
-        console.log('\x1b[34m%s\x1b[0m',`Successfully reloaded application (/) commands.`);
+        console.log('\x1b[34m%s\x1b[0m', `Successfully reloaded application (/) commands.`);
     } catch (error) {
         console.error(error);
     }
@@ -32,7 +32,7 @@ const rest = new REST({ version: "9" }).setToken(process.env.token);
     require(`./handlers/${handler}`)(client);
 });
 client.on('ready', () => {
-    console.log('\x1b[34m%s\x1b[0m',`Logged in as ${client.user.tag}!`);
+    console.log('\x1b[34m%s\x1b[0m', `Logged in as ${client.user.tag}!`);
     client.user.setActivity('Hentaiz', { type: 'WATCHING' });
 });
 client.on("interactionCreate", async (interaction) => {
@@ -53,5 +53,52 @@ client.on("interactionCreate", async (interaction) => {
         }
     }
 });
+// Discord-Player
+const { Player } = require("discord-player");
+client.player = new Player(client, {
+    leaveOnEnd: false,
+    leaveOnStop: false,
+    leaveOnEmpty: true,
+    leaveOnEmptyCooldown: 60000,
+    autoSelfDeaf: true,
+    initialVolume: 130,
+    ytdlDownloadOptions: {
+        requestOptions: {
+            headers: {
+                cookie: process.env.ytcookie,
+            }
+        }
+    }
+});
+client.player
+    .on("trackStart", (queue, track) => {
+        const embed = new MessageEmbed()
+            .setDescription(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`)
+        queue.metadata.send({ embeds: [embed] });
+    })
+
+    .on("trackAdd", (queue, track) => {
+        const embed = new MessageEmbed()
+            .setDescription(`🎶 | Track **${track.title}** queued!`);
+        queue.metadata.send({ embeds: [embed] });
+    })
+
+    .on("botDisconnect", (queue) => {
+        const embed = new MessageEmbed()
+            .setDescription("❌ | I was manually disconnected from the voice channel, clearing queue!");
+        queue.metadata.send({ embeds: [embed] });
+    })
+
+    .on("channelEmpty", (queue) => {
+        const embed = new MessageEmbed()
+            .setDescription("❌ | Nobody is in the voice channel, leaving...");
+        queue.metadata.send({ embeds: [embed] });
+    })
+
+    .on("queueEnd", (queue) => {
+        const embed = new MessageEmbed()
+            .setDescription("✅ | Queue finished!");
+        queue.metadata.send({ embeds: [embed] });
+    })
 keepalive();
 client.login(process.env.token);
