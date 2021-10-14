@@ -56,12 +56,6 @@ client.on("interactionCreate", async (interaction) => {
 // Discord-Player
 const { Player } = require("discord-player");
 client.player = new Player(client, {
-    leaveOnEnd: false,
-    leaveOnStop: false,
-    leaveOnEmpty: true,
-    leaveOnEmptyCooldown: 60000,
-    autoSelfDeaf: true,
-    initialVolume: 130,
     ytdlDownloadOptions: {
         requestOptions: {
             headers: {
