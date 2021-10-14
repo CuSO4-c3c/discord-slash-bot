@@ -53,46 +53,60 @@ client.on("interactionCreate", async (interaction) => {
         }
     }
 });
-// Discord-Player
-const { Player } = require("discord-player");
-client.player = new Player(client, {
-    ytdlDownloadOptions: {
-        requestOptions: {
-            headers: {
-                cookie: process.env.ytcookie,
-            }
-        }
-    }
-});
-client.player
-    .on("trackStart", (queue, track) => {
+// Distube
+const distube = require('distube');
+const { SoundCloudPlugin } = require("@distube/soundcloud");
+const { SpotifyPlugin } = require('@distube/spotify');
+client.distube = new distube.default(client, {
+    leaveOnEmpty: true,
+    emptyCooldown: 30,
+    leaveOnFinish: true,
+    emitNewSongOnly: true,
+    updateYouTubeDL: true,
+    nsfw: true,
+    youtubeCookie: process.env.ytcookie,
+    plugins: [new SoundCloudPlugin(), new SpotifyPlugin()],
+})
+const status = (queue) => `Volume: \`${queue.volume}%\` | Loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\` | Filter: \`${queue.filters.join(', ') || 'Off'}\``;
+// DisTube event listeners
+client.distube
+    .on("playSong", (queue, song) => {
         const embed = new MessageEmbed()
-            .setDescription(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`)
-        queue.metadata.send({ embeds: [embed] });
+            .setTitle('<:headphones:879518595602841630> Started Playing')
+            .setDescription(`[${song.name}](${song.url})`)
+            .addField('**Views:**', song.views.toString())
+            .addField('<:like:879371469132562552>', song.likes.toString())
+            .addField('<:dislike:879371468817973299>', song.dislikes.toString())
+            .addField('**Duration:**', song.formattedDuration.toString())
+            .addField('**Status**', status(queue).toString())
+            .setThumbnail(song.thumbnail)
+            .setColor("RANDOM")
+        queue.textChannel.send({ embeds: [embed] })
     })
-
-    .on("trackAdd", (queue, track) => {
+    .on('addSong', (queue, song) => {
         const embed = new MessageEmbed()
-            .setDescription(`🎶 | Track **${track.title}** queued!`);
-        queue.metadata.send({ embeds: [embed] });
+            .setTitle(`<:addsong:879518595665780746> Added song to queue`)
+            .setDescription(`\`${song.name}\` - \`${song.formattedDuration}\` - Requested by ${song.user}`)
+            .setColor("RANDOM")
+        queue.textChannel.send({ embeds: [embed] })
     })
-
-    .on("botDisconnect", (queue) => {
+    .on('addList', (queue, playlist) => {
         const embed = new MessageEmbed()
-            .setDescription("❌ | I was manually disconnected from the voice channel, clearing queue!");
-        queue.metadata.send({ embeds: [embed] });
+            .setTitle(`<:addsong:879518595665780746> Add list`)
+            .setDescription(`Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`)
+            .setColor("RANDOM")
+        queue.textChannel.send({ embeds: [embed] })
     })
-
-    .on("channelEmpty", (queue) => {
-        const embed = new MessageEmbed()
-            .setDescription("❌ | Nobody is in the voice channel, leaving...");
-        queue.metadata.send({ embeds: [embed] });
+    .on('error', (textChannel, e) => {
+        console.error(e)
+        textChannel.send(`An error encountered: ${e}`)
     })
-
-    .on("queueEnd", (queue) => {
-        const embed = new MessageEmbed()
-            .setDescription("✅ | Queue finished!");
-        queue.metadata.send({ embeds: [embed] });
-    })
+    .on('finish', queue => queue.textChannel.send('***No more song in queue. Leaving the channel***'))
+    .on('disconnect', queue => queue.textChannel.send('***Disconnected!***'))
+    .on('empty', queue => queue.textChannel.send('***Channel is empty. Leaving the channel!***'))
+    .on('initQueue', (queue) => {
+        queue.autoplay = false;
+        queue.volume = 50;
+    });
 keepalive();
 client.login(process.env.token);

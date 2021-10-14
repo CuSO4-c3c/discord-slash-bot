@@ -6,9 +6,9 @@ module.exports = (client) => {
         console.log(err, origin);
     })
     process.on('uncaughtExceptionMonitor', (err, origin) => {
-        console.log(err, origin);
+        
     });
     process.on('multipleResolves', (type, promise, reason) => {
-        console.log(type, promise, reason);
+        
     });
 }
