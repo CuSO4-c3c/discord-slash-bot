@@ -13,21 +13,23 @@
     "env": {
         "token": {
             "description": "The Discord Bot Token (https://discord.com/developers/applications)",
-            "required": "true"
+            "required": true
         },
         "botID": {
             "description": "Client_ID",
-            "required": "true"
+            "required": true
         },
         "oauthv2link": {
-            "description": "oauthv2link. (https://discord.com/oauth2/authorize/)"
+            "description": "oauthv2link. (https://discord.com/oauth2/authorize/)",
+            "required": false
         },
         "Admin": {
             "description": "Adminbot",
-            "required": "true"
+            "required": true
         },
         "ytcookie": {
-            "description": "youtube cookie"
+            "description": "youtube cookie",
+            "required": false
         }
     }
 }
