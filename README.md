@@ -15,6 +15,7 @@
 1. Nodejs>=16: **[Link](https://nodejs.org)**
 2. Git: **[Link](https://git-scm.com)**
 3. Discord Bot Token: **[Link](https://discord.com/developers/applications)**
+4. Discord Bot CLIENT_ID: **[Link](https://discord.com/developers/applications)**
 
 ## Setting
 1. Run `git clone https://github.com/Harmonynos/discord-slash-bot.git`
@@ -34,9 +35,9 @@
 ## Contact
 * HELLSNAKE - [Facebook](https://www.facebook.com/hellsnake98) - [Discord](https://discord.com/users/628633598001414165) - hellsnakess@hotmail.com
 
-## 📖License
+## License
 Released under the [MIT License](https://github.com/Harmonynos/discord-slash-bot/blob/main/LICENSE)
 
-## Run Project
+## Deploy Heroku
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Harmonynos/discord-slash-bot)
 
